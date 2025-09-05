@@ -1,6 +1,28 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 export default function RegisterUser() {
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    console.log(formData);
+    const data = {
+      fullname: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+    try {
+      const response = await axios.post("http://localhost:3000/api/auth/user/register", data, {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800 p-3 sm:p-4 lg:p-6">
       {/* Background pattern */}
@@ -26,7 +48,7 @@ export default function RegisterUser() {
           </div>
 
           {/* Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Name field */}
             <div className="group">
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -126,7 +148,7 @@ export default function RegisterUser() {
           {/* Sign in link */}
           <div className="mt-3 text-center">
             <button
-              type="button"
+              type="submit"
               className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium text-sm transition-colors duration-200 hover:underline underline-offset-4"
             >
               Sign in to your account

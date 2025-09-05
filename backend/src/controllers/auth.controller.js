@@ -76,7 +76,7 @@ const logout = async (req, res) => {
 };
 
 const registerPartner = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone, address } = req.body;
 
   if (!name || !email || !password) {
     throw new BadRequestError("Please provide creds");
@@ -90,6 +90,8 @@ const registerPartner = async (req, res) => {
 
   const partner = await PartnerModel.create({
     name: name,
+    phone: phone,
+    address: address,
     email: email,
     password: password,
   });

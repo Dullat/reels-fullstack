@@ -1,6 +1,30 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 export default function RegisterPartner() {
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    console.log(formData);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+      phone: formData.get("phone"),
+      address: formData.get("address"),
+    };
+    try {
+      const response = await axios.post("http://localhost:3000/api/auth/partner/register", data, {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800 p-3 sm:p-4 lg:p-6">
       {/* Background pattern */}
@@ -13,7 +37,7 @@ export default function RegisterPartner() {
           <div className="text-center mb-5 sm:mb-6">
             <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl mb-3">
               <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
             
@@ -21,23 +45,53 @@ export default function RegisterPartner() {
               Register Partner
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Create your partner account to get started
+              Create your business partner account
             </p>
           </div>
 
           {/* Form */}
-          <form className="space-y-4">
-            {/* Name field */}
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Business Name field */}
             <div className="group">
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Full Name
+                Business Name
               </label>
               <input
                 id="name"
                 name="name"
                 type="text"
-                autoComplete="name"
-                placeholder="Enter your full name"
+                autoComplete="organization"
+                placeholder="e.g. dullat.inc"
+                className="w-full px-3 py-2.5 bg-gray-50/50 dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-700 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-200 group-hover:border-gray-300 dark:group-hover:border-neutral-600 text-base"
+              />
+            </div>
+
+            {/* Phone field */}
+            <div className="group">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Phone Number
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                placeholder="e.g. 78346834"
+                className="w-full px-3 py-2.5 bg-gray-50/50 dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-700 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-200 group-hover:border-gray-300 dark:group-hover:border-neutral-600 text-base"
+              />
+            </div>
+
+            {/* Address field */}
+            <div className="group">
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Business Address
+              </label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                autoComplete="street-address"
+                placeholder="e.g. paper street"
                 className="w-full px-3 py-2.5 bg-gray-50/50 dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-700 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-200 group-hover:border-gray-300 dark:group-hover:border-neutral-600 text-base"
               />
             </div>
@@ -52,7 +106,7 @@ export default function RegisterPartner() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                placeholder="Enter your email"
+                placeholder="e.g. partner@mail.com"
                 className="w-full px-3 py-2.5 bg-gray-50/50 dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-700 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-200 group-hover:border-gray-300 dark:group-hover:border-neutral-600 text-base"
               />
             </div>
@@ -81,7 +135,7 @@ export default function RegisterPartner() {
                 className="h-4 w-4 mt-0.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500/40 focus:ring-offset-2 dark:border-neutral-600 dark:bg-neutral-800 dark:focus:ring-offset-neutral-900 transition-colors duration-200"
               />
               <label htmlFor="terms" className="ml-2 block text-xs text-gray-700 dark:text-gray-300 leading-4">
-                I agree to the <span className="text-indigo-600 dark:text-indigo-400 font-medium">Terms of Service</span> and <span className="text-indigo-600 dark:text-indigo-400 font-medium">Privacy Policy</span>
+                I agree to the <span className="text-indigo-600 dark:text-indigo-400 font-medium">Partner Terms</span> and <span className="text-indigo-600 dark:text-indigo-400 font-medium">Privacy Policy</span>
               </label>
             </div>
 

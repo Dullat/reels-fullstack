@@ -9,6 +9,14 @@ const foodPartnerSchema = new mongoose.Schema(
       type: String,
       required: [true, "Plz provide a name"],
     },
+    phone: {
+      type: String,
+      required: [true, "Plz provide a phone"],
+    },
+    address: {
+      type: String,
+      required: [true, "Plz provide an address"],
+    },
     email: {
       type: String,
       required: [true, "Plz provide an email"],

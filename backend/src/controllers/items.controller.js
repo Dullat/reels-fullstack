@@ -7,11 +7,15 @@ const createItem = async (req, res) => {
 
   const item = await ItemModel.create({
     name: req.body.name,
+    title: req.body.title,
     description: req.body.description,
     video: fileUploadResult.url,
     fileId: fileUploadResult.fileId,
     createdBy: req.partner._id,
     category: req.body.category,
+    likes: 0,
+    saves: 0,
+    productId: req.body.productId,
   });
 
   res.status(201).json({
