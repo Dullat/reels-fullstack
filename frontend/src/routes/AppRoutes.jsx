@@ -4,6 +4,7 @@ import LoginPartner from "../pages/auth/LoginPartner";
 import RegisterUser from "../pages/auth/RegisterUser";
 import LoginUser from "../pages/auth/LoginUser";
 import ReelsPage from "../pages/general/ReelsPage";
+import ProfilePage from "../pages/general/ProfilePage";
 
 const AppRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const AppRoutes = () => {
         <Route path="/" element={<ReelsPage />} />
         <Route path="/partner/register" element={<RegisterPartner />} />
         <Route path="/partner/login" element={<LoginPartner />} />
+        <Route path="/partner/profile/:id" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );
