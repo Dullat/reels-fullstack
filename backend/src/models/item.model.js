@@ -9,6 +9,11 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a video"],
   },
+  productId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Product",
+    required: [true, "Pleasse provide product id"],
+  },
   fileId: {
     type: String,
   },

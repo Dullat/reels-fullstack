@@ -26,6 +26,9 @@ const foodPartnerSchema = new mongoose.Schema(
       type: String,
       required: [true, "Plz provide a pass"],
     },
+    imageUrl: {
+      type: String,
+    },
   },
   {
     timestamp: true,
