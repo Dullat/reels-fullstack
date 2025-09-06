@@ -47,10 +47,21 @@ foodPartnerSchema.methods.createJWT = function () {
     { userId: this._id, name: this.name },
     process.env.JWT_SECRET,
     {
-      expiresIn: "2d",
+      expiresIn: "15m",
     },
   );
 };
+
+foodPartnerSchema.methods.genrateRefreshToken = function () {
+  return jwt.sign(
+    { userId: this._id, name: this.name },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+};
+
 foodPartnerSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;

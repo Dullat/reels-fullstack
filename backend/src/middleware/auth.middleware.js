@@ -1,13 +1,20 @@
 const UserModel = require("../models/user.model.js");
 const PartnerModel = require("../models/foodpartner.model.js");
 const jwt = require("jsonwebtoken");
-const unauthenticatedError = require("../erros/unauthenticated.error.js");
+const UnauthenticatedError = require("../erros/unauthenticated.error.js");
 
 const authPartnerMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  console.log(req.cookies.accessToken);
+  const token = req.cookies.accessToken;
   if (!token) {
-    throw new unauthenticatedError("unauthenticated");
+    throw new UnauthenticatedError("unauthenticated");
   }
+  
+  // const token = req.cookier?.accessToken || req.headers("Authorization").replace("Bearer ", "")
+  // you also do this when access is made form mobile application
+  // coz there we dont have cookies
+
+
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -15,14 +22,15 @@ const authPartnerMiddleware = async (req, res, next) => {
     req.partner = partner;
     next();
   } catch (error) {
-    throw new unauthenticated("access denied");
+    console.log(error)
+    throw new UnauthenticatedError("access denied");
   }
 };
 
 const authUserMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.accessToken;
   if (!token) {
-    throw new unauthenticatedError("unauthenticated");
+    throw new UnauthenticatedError("unauthenticated");
   }
 
   try {
@@ -31,7 +39,7 @@ const authUserMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    throw new unauthenticated("access denied");
+    throw new UnauthenticatedError("access denied");
   }
 };
 

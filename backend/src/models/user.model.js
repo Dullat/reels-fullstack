@@ -40,6 +40,16 @@ userSchema.methods.createJWT = function () {
   );
 };
 
+userSchema.methods.genrateRefreshToken = function () {
+  return jwt.sign(
+    { userId: this._id, name: this.name },
+    "dullatRefreshToken",
+    {
+      expiresIn: "7d",
+    },
+  );
+};
+
 userSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;

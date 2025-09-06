@@ -3,6 +3,16 @@ const BadRequestError = require("../erros/badrequest.error.js");
 const userModel = require("../models/user.model.js");
 const PartnerModel = require("../models/foodpartner.model.js");
 
+const userTokenModel = require("../models/usertoken.model.js");
+const partnerTokenModel = require("../models/partnertoken.model.js");
+
+
+const generateAccessAndRefreshToken = (client) => {
+  const accessToken = client.createJWT();
+  const refreshToken = client.genrateRefreshToken();
+  return { accessToken, refreshToken };
+};
+
 const registerUser = async (req, res) => {
   const { fullname, email, password } = req.body;
 
@@ -69,7 +79,16 @@ const loginUser = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.clearCookie("token");
+  console.log("partner token", req.partner);
+  if(req.partner){
+    const partnerToken = await partnerTokenModel.findOneAndDelete({partnerId: req.partner._id});
+  }
+  if(req.user){
+    const userToken = await userTokenModel.findOneAndDelete({userId: req.user._id});
+  }
+
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
   res.status(200).json({
     message: "Logged out successfully",
   });
@@ -128,9 +147,37 @@ const loginPartner = async (req, res) => {
     throw new BadRequestError("Wrong password");
   }
 
-  const token = partner.createJWT();
+  const { accessToken, refreshToken } = generateAccessAndRefreshToken(partner);
 
-  res.cookie("token", token);
+  const token = await partnerTokenModel.findByIdAndUpdate(partner._id,
+    {
+      partnerId: partner._id,
+      refreshToken: refreshToken,
+      userAgent: req.headers["user-agent"],
+      ip: req.ip
+    },
+    {
+      new: true,
+      upsert: true
+    }
+  );
+
+  if (!token) {
+    throw new BadRequestError("Something went wrong");
+  }
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 15 * 60 * 1000,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
 
   res.status(200).json({
     message: "partner Logged-in successfully",
