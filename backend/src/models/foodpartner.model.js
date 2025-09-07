@@ -44,7 +44,7 @@ foodPartnerSchema.pre("save", async function (next) {
 
 foodPartnerSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userId: this._id, name: this.name },
+    { partnerId: this._id, name: this.name },
     process.env.JWT_SECRET,
     {
       expiresIn: "15m",
@@ -54,7 +54,7 @@ foodPartnerSchema.methods.createJWT = function () {
 
 foodPartnerSchema.methods.genrateRefreshToken = function () {
   return jwt.sign(
-    { userId: this._id, name: this.name },
+    { partnerId: this._id, name: this.name },
     process.env.JWT_SECRET,
     {
       expiresIn: "7d",

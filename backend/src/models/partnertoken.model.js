@@ -21,8 +21,19 @@ const partnerTokenSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now(),
-        expires: 60 * 60 * 24 * 7,
     },
+    lastUsed: {
+        type: Date,
+    },
+    expiresAt: {
+        type: Date,
+        required: true,
+        index: {expires: 0}
+    },
+    isValid: {
+        type: Boolean,
+        default: true
+    }
 });
 
 module.exports = mongoose.model("PartnerToken", partnerTokenSchema);

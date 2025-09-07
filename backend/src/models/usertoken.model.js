@@ -21,8 +21,15 @@ const userTokenSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now(),
-        expires: 60 * 60 * 24 * 7,
     },
+    lastUsed: {
+        type: Date,
+    },
+    expiresAt: {
+        type: Date,
+        required: true,
+        index: {expires: 0}
+    }
 });
 
 module.exports = mongoose.model("UserToken", userTokenSchema);

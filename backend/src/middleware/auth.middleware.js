@@ -1,5 +1,6 @@
 const UserModel = require("../models/user.model.js");
 const PartnerModel = require("../models/foodpartner.model.js");
+const PartnerToken = require("../models/partnertoken.model.js")
 const jwt = require("jsonwebtoken");
 const UnauthenticatedError = require("../erros/unauthenticated.error.js");
 
@@ -9,7 +10,7 @@ const authPartnerMiddleware = async (req, res, next) => {
   if (!token) {
     throw new UnauthenticatedError("unauthenticated");
   }
-  
+
   // const token = req.cookier?.accessToken || req.headers("Authorization").replace("Bearer ", "")
   // you also do this when access is made form mobile application
   // coz there we dont have cookies
@@ -18,7 +19,7 @@ const authPartnerMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const partner = await PartnerModel.findById(decoded.userId);
+    const partner = await PartnerModel.findById(decoded.partnerId);
     req.partner = partner;
     next();
   } catch (error) {
@@ -43,4 +44,24 @@ const authUserMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = { authPartnerMiddleware, authUserMiddleware };
+
+const authRefreshToken = async (req, res, next) => {
+  const token = req.cookies.refreshToken
+  if (!token) {
+    throw new UnauthenticatedError("No token provied")
+  }
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET)
+    const dbToken = await PartnerToken.findOne({ partnerId: payload.partnerId, refreshToken: token })
+    if (!dbToken || !payload) {
+      throw new UnauthenticatedError("Invalid token")
+    }
+    req.partnerId = payload.partnerId
+    next()
+  } catch (error) {
+    throw new UnauthenticatedError("Invalid or missing...")
+  }
+}
+
+module.exports = { authPartnerMiddleware, authUserMiddleware, authRefreshToken };
