@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 // Custom hook for video autoplay with Promise handling
 const useVideoAutoPlay = (threshold = 0.7, isGloballyMuted) => {
@@ -189,11 +190,19 @@ const ReelItem = ({ reel, index, isGloballyMuted, setIsGloballyMuted }) => {
                     {/* Content Info */}
                     <div className="flex-1 mr-4">
                         <h3 className="text-white font-semibold text-lg mb-2 line-clamp-2">
-                            {reel.title || "Amazing product showcase"}
+                            {reel.name || "Amazing product showcase"}
                         </h3>
                         <p className="text-gray-200 text-sm mb-3 line-clamp-2">
                             {reel.description || "Discover this incredible offer from our partner"}
                         </p>
+                        <div className="flex gap-4 *:rounded *:px-2 *:py-1 text-white *:min-w-[6rem] *:text-center">
+                            <Link to={`/partner/profile/${reel.createdBy}`} className="bg-blue-600">
+                                Visit-Store
+                            </Link>
+                            <Link to={`/products/${reel.productId}`} className="bg-green-500">
+                                Visit-Item
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Partner Profile */}
