@@ -41,7 +41,7 @@ const registerUser = async (req, res) => {
     refreshToken: refreshToken,
     userAgent: req.headers["user-agent"],
     ip: req.ip,
-    expiresAt: new Date(Date.now() * 1000 * 60 * 60 * 24 * 90)
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 90)
   });
 
   if (!token) {
@@ -96,7 +96,7 @@ const loginUser = async (req, res) => {
     refreshToken: refreshToken,
     userAgent: req.headers["user-agent"],
     ip: req.ip,
-    expiresAt: new Date(Date.now() * 1000 * 60 * 60 * 24 * 90)
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 90)
   });
 
   if (!token) {
