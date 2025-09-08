@@ -1,6 +1,6 @@
 const UserModel = require("../models/user.model.js");
 const PartnerModel = require("../models/foodpartner.model.js");
-const PartnerToken = require("../models/partnertoken.model.js")
+const PartnerToken = require("../models/partnertoken.model.js");
 const jwt = require("jsonwebtoken");
 const UnauthenticatedError = require("../erros/unauthenticated.error.js");
 
@@ -15,15 +15,13 @@ const authPartnerMiddleware = async (req, res, next) => {
   // you also do this when access is made form mobile application
   // coz there we dont have cookies
 
-
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const partner = await PartnerModel.findById(decoded.partnerId);
     req.partner = partner;
     next();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw new UnauthenticatedError("access denied");
   }
 };
@@ -31,12 +29,15 @@ const authPartnerMiddleware = async (req, res, next) => {
 const authUserMiddleware = async (req, res, next) => {
   const token = req.cookies.accessToken;
   if (!token) {
-    throw new UnauthenticatedError("unauthenticated");
+    return next(new UnauthenticatedError("unauthenticated"));
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await UserModel.findById(decoded.userId);
+    if (!user) {
+      return next(new UnauthenticatedError("User not found"));
+    }
     req.user = user;
     next();
   } catch (error) {
@@ -44,24 +45,30 @@ const authUserMiddleware = async (req, res, next) => {
   }
 };
 
-
 const authRefreshToken = async (req, res, next) => {
-  const token = req.cookies.refreshToken
+  const token = req.cookies.refreshToken;
   if (!token) {
-    throw new UnauthenticatedError("No token provied")
+    throw new UnauthenticatedError("No token provied");
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET)
-    const dbToken = await PartnerToken.findOne({ partnerId: payload.partnerId, refreshToken: token })
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const dbToken = await PartnerToken.findOne({
+      partnerId: payload.partnerId,
+      refreshToken: token,
+    });
     if (!dbToken || !payload) {
-      throw new UnauthenticatedError("Invalid token")
+      throw new UnauthenticatedError("Invalid token");
     }
-    req.partnerId = payload.partnerId
-    next()
+    req.partnerId = payload.partnerId;
+    next();
   } catch (error) {
-    throw new UnauthenticatedError("Invalid or missing...")
+    throw new UnauthenticatedError("Invalid or missing...");
   }
-}
+};
 
-module.exports = { authPartnerMiddleware, authUserMiddleware, authRefreshToken };
+module.exports = {
+  authPartnerMiddleware,
+  authUserMiddleware,
+  authRefreshToken,
+};

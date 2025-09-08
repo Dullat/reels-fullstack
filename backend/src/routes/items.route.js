@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { createItem, getItems } = require("../controllers/items.controller.js");
+const {
+  createItem,
+  getItems,
+  getReelsByPartner,
+} = require("../controllers/items.controller.js");
 const {
   authPartnerMiddleware,
   authUserMiddleware,
@@ -13,7 +17,16 @@ const upload = multer({
 
 router
   .route("/")
-  .post(authPartnerMiddleware, upload.single("video"), createItem)
-  .get(authUserMiddleware, getItems);
+  .post(
+    authPartnerMiddleware,
+    upload.fields([
+      { name: "video", maxCount: 1 },
+      { name: "thumbnail", maxCount: 1 },
+    ]),
+    createItem,
+  )
+  .get(getItems);
+
+router.route("/bypartner/:id").get(getReelsByPartner);
 
 module.exports = router;
