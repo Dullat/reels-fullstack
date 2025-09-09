@@ -7,9 +7,8 @@ const ProductsGrid = ({ products }) => {
     <div className="dark:text-white">
       <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-2">
         {products.map((product) => (
-          <Link to={`/products/${product._id}`}>
+          <Link to={`/products/${product._id}`} key={product._id}>
             <div
-              key={product._id}
               className="w-full aspect-square cursor-pointer relative"
               style={{
                 backgroundImage: `url('${product.imageUrl}')`,
@@ -32,4 +31,3 @@ const ProductsGrid = ({ products }) => {
 };
 
 export default ProductsGrid;
-
