@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import ProductsGrid from "../../components/ProductsGrid";
 import ReelsGrid from "../../components/ReelsGrid";
 import ReelItem from "../../components/ReelItem";
+import ProfessionalBox from "../../components/ProfessionalBox.jsx";
+import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 
 const ProfilePage = ({ partnerId, isOwnProfile = false }) => {
@@ -12,7 +14,11 @@ const ProfilePage = ({ partnerId, isOwnProfile = false }) => {
   const [loading, setLoading] = useState(true);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [activeTab, setActiveTab] = useState("products");
+  const [isPartner, setIsPartner] = useState(false);
   const { id } = useParams();
+  const { logout, auth } = useAuth();
+
+  console.log(auth);
 
   useEffect(() => {
     console.log(id);
@@ -33,6 +39,12 @@ const ProfilePage = ({ partnerId, isOwnProfile = false }) => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (auth?.role === "partner" && auth?.partner?._id === id) {
+      setIsPartner(true);
+    }
+  }, [auth]);
 
   useEffect(() => {
     const getData = async () => {
@@ -95,6 +107,12 @@ const ProfilePage = ({ partnerId, isOwnProfile = false }) => {
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
               {profile.name}
             </h1>
+            <button
+              onClick={logout}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-full transition-colors"
+            >
+              logout
+            </button>
           </div>
         </div>
       </div>
@@ -127,6 +145,8 @@ const ProfilePage = ({ partnerId, isOwnProfile = false }) => {
             </p>
           </div>
         </div>
+
+        {isPartner && <ProfessionalBox />}
 
         {/* Tabs */}
         <div className="border-t border-gray-200 dark:border-neutral-800">
