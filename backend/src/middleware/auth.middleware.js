@@ -6,10 +6,14 @@ const UnauthenticatedError = require("../erros/unauthenticated.error.js");
 
 const authPartnerMiddleware = async (req, res, next) => {
   console.log(req.cookies.accessToken);
-  const token = req.cookies.accessToken;
+  const token =
+    req.cookies.accessToken ||
+    req.headers.authorization?.replace("Bearer ", "");
   if (!token) {
     throw new UnauthenticatedError("unauthenticated");
   }
+
+  console.log("token ", token);
 
   // const token = req.cookier?.accessToken || req.headers("Authorization").replace("Bearer ", "")
   // you also do this when access is made form mobile application
@@ -27,7 +31,10 @@ const authPartnerMiddleware = async (req, res, next) => {
 };
 
 const authUserMiddleware = async (req, res, next) => {
-  const token = req.cookies.accessToken;
+  const token =
+    req.cookies.accessToken ||
+    req.headers.authorization?.replace("Bearer ", "");
+
   if (!token) {
     return next(new UnauthenticatedError("unauthenticated"));
   }
@@ -46,7 +53,9 @@ const authUserMiddleware = async (req, res, next) => {
 };
 
 const authRefreshToken = async (req, res, next) => {
-  const token = req.cookies.refreshToken;
+  const token =
+    req.cookies.refreshToken ||
+    req.headers.authorization?.replace("Bearer ", "");
   if (!token) {
     throw new UnauthenticatedError("No token provied");
   }
@@ -57,6 +66,7 @@ const authRefreshToken = async (req, res, next) => {
       partnerId: payload.partnerId,
       refreshToken: token,
     });
+
     if (!dbToken || !payload) {
       throw new UnauthenticatedError("Invalid token");
     }
