@@ -1,9 +1,11 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPartner() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -13,31 +15,42 @@ export default function LoginPartner() {
       password: formData.get("password"),
     };
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/partner/login", data, {
-        withCredentials: true,
-      });
-      console.log(response.data);
-      navigate("/");
+      const res = await login("partner", data);
+      if (res.success !== true) {
+        throw res.error;
+      }
+
+      navigate(`/partner/profile/${res.id}`);
     } catch (error) {
-      console.error(error);
+      alert(error.message);
     }
-  }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800 p-3 sm:p-4 lg:p-6">
       {/* Background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.1),transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.05),transparent_50%)]" />
-      
+
       {/* Main form container */}
       <div className="relative w-full max-w-xs sm:max-w-sm">
         <div className="relative bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-gray-200/20 dark:border-white/10 rounded-xl shadow-xl shadow-gray-500/10 dark:shadow-black/20 p-5 sm:p-6">
           {/* Header */}
           <div className="text-center mb-5 sm:mb-6">
             <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl mb-3">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <svg
+                className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
               </svg>
             </div>
-            
+
             <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-1">
               Partner Login
             </h1>
@@ -47,10 +60,13 @@ export default function LoginPartner() {
           </div>
 
           {/* Form */}
-          <form className="space-y-4" onSubmit={handleSubmit} >
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Email field */}
             <div className="group">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Email Address
               </label>
               <input
@@ -66,7 +82,10 @@ export default function LoginPartner() {
             {/* Password field */}
             <div className="group">
               <div className="flex items-center justify-between mb-1">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   Password
                 </label>
                 <button
@@ -94,7 +113,10 @@ export default function LoginPartner() {
                 type="checkbox"
                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500/40 focus:ring-offset-2 dark:border-neutral-600 dark:bg-neutral-800 dark:focus:ring-offset-neutral-900 transition-colors duration-200"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-xs text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-xs text-gray-700 dark:text-gray-300"
+              >
                 Remember me for 30 days
               </label>
             </div>
