@@ -1,11 +1,19 @@
 const ItemModel = require("../models/item.model.js");
 const PartnerModel = require("../models/foodpartner.model.js");
+const ProductModel = require("../models/product.model.js");
 const BadRequestError = require("../erros/badrequest.error.js");
 const UnauthenticatedError = require("../erros/unauthenticated.error.js");
 const { uploadFile } = require("../services/storage.services.js");
 const { v4: uuid } = require("uuid");
 
 const createItem = async (req, res) => {
+  const product = await ProductModel.findById(req.body.productId);
+
+  if (!product) {
+    throw new BadRequestError("No product assiciated with this id");
+    return;
+  }
+
   const videoUploadResult = await uploadFile(req.files.video[0].buffer, uuid());
   const thumbnailUploadResult = await uploadFile(
     req.files.thumbnail[0].buffer,
@@ -26,6 +34,8 @@ const createItem = async (req, res) => {
     saves: 0,
     productId: req.body.productId,
   });
+
+  console.log(item);
 
   res.status(201).json({
     message: "item created successfully",
