@@ -6,6 +6,8 @@ import LoginUser from "../pages/auth/LoginUser";
 import ReelsPage from "../pages/general/ReelsPage";
 import ProfilePage from "../pages/general/ProfilePage";
 import ProductPage from "../pages/general/ProductPage";
+import UploadProducts from "../pages/general/UploadProducts";
+import UplaodReels from "../pages/general/UploadReels";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +20,8 @@ const AppRoutes = () => {
         <Route path="/partner/login" element={<LoginPartner />} />
         <Route path="/partner/profile/:id" element={<ProfilePage />} />
         <Route path="/products/:id" element={<ProductPage />} />
+        <Route path="/products/upload" element={<UploadProducts />} />
+        <Route path="/reels/upload" element={<UplaodReels />} />
       </Routes>
     </BrowserRouter>
   );

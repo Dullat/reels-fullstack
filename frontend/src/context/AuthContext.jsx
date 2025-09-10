@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
     try {
       const res = await fetch(url, {
         ...options,
-        headers,
+        headers, // <--- overriding the headers in ...options
         credentials: "include",
       });
 
@@ -33,6 +33,7 @@ const AuthProvider = ({ children }) => {
 
       return res;
     } catch (error) {
+      console.log("error occured");
       console.log(error);
     }
   };
@@ -171,7 +172,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout, register }}>
+    <AuthContext.Provider value={{ auth, authFetch, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

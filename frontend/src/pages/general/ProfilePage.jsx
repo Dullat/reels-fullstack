@@ -85,7 +85,7 @@ const ProfilePage = ({ partnerId, isOwnProfile = false }) => {
       {/* Header */}
       <div className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex w-full items-center space-x-4">
             <button
               onClick={() => window.history.back()}
               className="p-2 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-full transition-colors"
@@ -109,7 +109,7 @@ const ProfilePage = ({ partnerId, isOwnProfile = false }) => {
             </h1>
             <button
               onClick={logout}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-full transition-colors"
+              className="p-2 ml-auto dark:text-white cursor-pointer rounded-full transition-colors"
             >
               logout
             </button>

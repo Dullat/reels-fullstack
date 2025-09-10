@@ -10,7 +10,7 @@ const authPartnerMiddleware = async (req, res, next) => {
     req.cookies.accessToken ||
     req.headers.authorization?.replace("Bearer ", "");
   if (!token) {
-    throw new UnauthenticatedError("unauthenticated");
+    throw new UnauthenticatedError("unauthenticated no token");
   }
 
   console.log("token ", token);
