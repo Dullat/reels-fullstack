@@ -263,8 +263,8 @@ const loginPartner = async (req, res) => {
   res.cookie("accessToken", accessToken, {
     maxAge: 15 * 60 * 1000,
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: true, // false for local dev
+    sameSite: "none", // lax
     path: "/api/auth",
   });
 
